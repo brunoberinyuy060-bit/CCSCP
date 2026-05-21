@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capuchin Sport Complex</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Alpine JS CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Configuration for Tailwind CSS -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brown: {
+              50: '#efebe9',
+              100: '#d7ccc8',
+              200: '#bcaaa4',
+              300: '#a1887f',
+              400: '#8d6e63',
+              500: '#795548',
+              600: '#6d4c41',
+              700: '#5d4037',
+              800: '#4e342e',
+              900: '#3e2723',
+              950: '#1d110f',
+            }
+          },
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            display: ["Playfair Display", "serif"],
+            jakarta: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  </style>
+</head>
+<body class="bg-[#F4F1EE] text-slate-900 font-sans selection:bg-brown-100 selection:text-brown-900 overflow-x-hidden">
+
+  <!-- Application Shell using AlpineJS -->
+  <div x-data="appState()" x-init="init()" class="min-h-screen">
+    
+    <!-- Navigation Bar -->
+    <nav 
+      class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 flex items-center justify-between"
+      :class="isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-transparent'"
+      @scroll.window="isScrolled = (window.pageYOffset > 20)"
+    >
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-lg border border-brown-100 p-1">
+          <img 
+            src="https://i.imgur.com/JbPZHde.png" 
+            alt="Capuchin Sport Complex Logo" 
+            class="w-full h-full object-contain"
+            referrerpolicy="no-referrer"
+          />
+        </div>
+        <span class="font-display font-bold text-xl tracking-tight hidden sm:block text-brown-900">Capuchin Sport Complex</span>
+      </div>
+
+      <!-- Desktop Navigation Menu -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#home" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.home"></a>
+        <a href="#about" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.activities"></a>
+        <a href="#activities" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.activities"></a>
+        <a href="#spiritual" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.spiritual"></a>
+        <a href="#education" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.education"></a>
+        <a href="#bookstore" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.bookstore"></a>
+        <a href="#gallery" class="text-sm font-medium text-slate-600 hover:text-brown-700 transition-colors uppercase tracking-widest" x-text="translations[lang].nav.gallery"></a>
+        
+        <div class="h-4 w-px bg-slate-200"></div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="languages" class="text-slate-400 w-4 h-4"></i>
+          <select 
+            x-model="lang"
+            class="bg-transparent text-sm font-semibold focus:outline-none cursor-pointer hover:text-brown-700"
+          >
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="pid">Pidgin</option>
+            <option value="it">Italiano</option>
+          </select>
+        </div>
+      </div>
+
+      <a 
+        href="#booking" 
+        class="hidden md:flex px-5 py-2.5 bg-brown-700 text-white rounded-full text-sm font-bold shadow-md hover:bg-brown-800 transition-all active:scale-95"
+        x-text="translations[lang].nav.booking"
+      ></a>
+
+      <button 
+        class="md:hidden text-slate-600"
+        @click="isMenuOpen = !isMenuOpen"
+      >
+        <template x-if="isMenuOpen">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </template>
+        <template x-if="!isMenuOpen">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </template>
+      </button>
+    </nav>
+
+    <!-- Mobile Drawer Menu -->
+    <div 
+      x-show="isMenuOpen" 
+      x-transition
+      class="fixed inset-0 z-40 bg-white pt-24 px-8 flex flex-col gap-6"
+      style="display: none;"
+    >
+      <a href="#home" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.home"></a>
+      <a href="#about" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.activities"></a>
+      <a href="#activities" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.activities"></a>
+      <a href="#spiritual" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.spiritual"></a>
+      <a href="#education" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.education"></a>
+      <a href="#bookstore" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.bookstore"></a>
+      <a href="#gallery" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.gallery"></a>
+      <a href="#booking" @click="isMenuOpen = false" class="text-2xl font-bold text-slate-800" x-text="translations[lang].nav.booking"></a>
+      
+      <div class="flex items-center gap-4 mt-4 pt-6 border-t border-slate-100 flex-wrap">
+        <button @click="lang = 'en'; isMenuOpen = false" class="px-3 py-1 rounded-md" :class="lang === 'en' ? 'bg-brown-100 text-brown-700 font-bold' : ''">EN</button>
+        <button @click="lang = 'fr'; isMenuOpen = false" class="px-3 py-1 rounded-md" :class="lang === 'fr' ? 'bg-brown-100 text-brown-700 font-bold' : ''">FR</button>
+        <button @click="lang = 'pid'; isMenuOpen = false" class="px-3 py-1 rounded-md" :class="lang === 'pid' ? 'bg-brown-100 text-brown-700 font-bold' : ''">PID</button>
+        <button @click="lang = 'it'; isMenuOpen = false" class="px-3 py-1 rounded-md" :class="lang === 'it' ? 'bg-brown-100 text-brown-700 font-bold' : ''">IT</button>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=2070&auto=format&fit=crop" 
+          alt="Capuchin Complex Background" 
+          class="w-full h-full object-cover brightness-50"
+          referrerPolicy="no-referrer"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#F4F1EE]" />
+      </div>
+
+      <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <div>
+          <!-- Profile Avatar Group -->
+          <div class="flex justify-center mb-8">
+            <div class="w-28 h-28 md:w-36 md:h-36 rounded-full border-4 border-white/30 overflow-hidden shadow-2xl relative group">
+              <img 
+                src="https://i.imgur.com/gdDIr0F.jpeg" 
+                alt="Our Youth" 
+                class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
+                referrerPolicy="no-referrer"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-brown-900/40 to-transparent" />
+            </div>
+          </div>
+          
+          <span class="inline-block px-4 py-1.5 bg-brown-700/80 backdrop-blur-sm text-yellow-400 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-6">
+            Bambui, Bamenda & Beyond
+          </span>
+          <h1 class="text-4xl md:text-7xl font-display font-black text-brown-900 leading-[1.1] mb-8 drop-shadow-sm" x-text="translations[lang].hero.title"></h1>
+          <p class="text-lg md:text-2xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed font-light" x-text="translations[lang].hero.subtitle"></p>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a 
+              href="#activities" 
+              class="px-8 py-4 bg-brown-700 text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-brown-800 transition-all group shadow-xl shadow-brown-950/40"
+            >
+              <span x-text="translations[lang].hero.cta"></span>
+              <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+            <a 
+              href="#booking" 
+              class="px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-2xl font-bold hover:bg-white/20 transition-all"
+              x-text="translations[lang].nav.booking"
+            ></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating visual design elements -->
+      <div class="absolute top-1/4 left-10 w-24 h-24 bg-brown-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-10 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl animate-pulse"></div>
+    </section>
+
+    <!-- Mission / Context (About) -->
+    <section id="about" class="relative py-32 px-6 overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://i.imgur.com/z82FKnM.jpg" 
+          alt="About Capuchin Complex" 
+          class="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+        <div class="absolute inset-0 bg-brown-950/80 backdrop-blur-[2px]" />
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <div class="relative">
+            <div class="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/20">
+              <img 
+                src="https://images.unsplash.com/photo-1540317580114-ed684c0c5c44?q=80&w=2000&auto=format&fit=crop" 
+                alt="Children playing" 
+                class="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+          <div class="space-y-8 text-white">
+            <span class="text-yellow-500 font-bold uppercase tracking-widest text-sm">— <span x-text="translations[lang].mission.title"></span> —</span>
+            <h2 class="text-4xl md:text-6xl font-display font-black leading-tight">
+              A Safe Refuge in Difficult Times
+            </h2>
+            <p class="text-xl md:text-2xl text-brown-100 leading-relaxed font-light italic opacity-90" x-text="'&quot;' + translations[lang].mission.text + '&quot;'"></p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+              <div class="p-8 bg-white/10 backdrop-blur-md border border-white/10 rounded-[2rem] shadow-xl hover:bg-white/20 transition-all">
+                <div class="w-12 h-12 bg-brown-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brown-950/40">
+                  <i data-lucide="compass" class="w-6 h-6"></i>
+                </div>
+                <h4 class="font-bold text-xl mb-2">Healing Trauma</h4>
+                <p class="text-sm text-brown-200">Professional counseling and spiritual guidance to find peace.</p>
+              </div>
+              <div class="p-8 bg-white/10 backdrop-blur-md border border-white/10 rounded-[2rem] shadow-xl hover:bg-white/20 transition-all">
+                <div class="w-12 h-12 bg-yellow-500 text-brown-900 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-900/40">
+                  <i data-lucide="heart" class="w-6 h-6"></i>
+                </div>
+                <h4 class="font-bold text-xl mb-2">Joy of Play</h4>
+                <p class="text-sm text-brown-200">Unrestricted access to sports and recreational games.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recreational Activities / Sport Section -->
+    <section id="activities" class="relative py-32 overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://i.imgur.com/dgTR930.jpeg" 
+          alt="Sports at Capuchin Complex" 
+          class="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-[1px]" />
+      </div>
+
+      <div class="max-w-7xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-16 space-y-4">
+          <span class="text-lime-400 font-bold uppercase tracking-[0.2em] text-sm md:text-base">— <span x-text="translations[lang].activities.title"></span> —</span>
+          <h2 class="text-4xl md:text-6xl font-display font-black uppercase tracking-tight text-white" x-text="translations[lang].activities.title"></h2>
+          <p class="text-slate-300 max-w-xl mx-auto text-lg">
+            Experience the pulse of African sportsmanship. From football to traditional games, we provide a vibrant space for physical growth and competitive joy.
+          </p>
+        </div>
+
+        <!-- Carousel -->
+        <div class="mb-16 overflow-hidden relative">
+          <div class="flex gap-6 overflow-x-auto no-scrollbar snap-x pb-4">
+            <template x-for="(item, i) in activityImages" :key="i">
+              <div class="min-w-[300px] md:min-w-[450px] aspect-[16/10] rounded-[2.5rem] overflow-hidden relative group shadow-2xl border-2 border-white/10 snap-center">
+                <img 
+                  :src="item.url" 
+                  :alt="item.title" 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-8">
+                  <span class="text-white font-bold text-2xl" x-text="item.title"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+          <div class="mt-8 flex justify-center gap-2">
+            <span class="text-xs text-white/50 font-bold uppercase tracking-widest flex items-center gap-2">
+              <i data-lucide="chevron-right" class="w-4 h-4 animate-pulse"></i> Swipe or scroll to explore our facilities
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+          <template x-for="game in translations[lang].activities.games" :key="game">
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl text-center shadow-lg border border-white/10 flex flex-col items-center justify-center gap-3 group transition-all hover:bg-white/20">
+              <div class="w-12 h-12 bg-lime-500 rounded-2xl flex items-center justify-center text-brown-900 group-hover:bg-white group-hover:text-lime-600 transition-colors">
+                <i data-lucide="dribbble" class="w-6 h-6"></i>
+              </div>
+              <span class="text-sm font-bold tracking-tight text-white" x-text="game"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spiritual & Quiet Places -->
+    <section id="spiritual" class="relative py-32 px-6 overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://i.imgur.com/LUjyl5r.jpeg" 
+          alt="Quiet Spaces & Spiritual Care" 
+          class="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+        <div class="absolute inset-0 bg-brown-950/85 backdrop-blur-[2px]" />
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <div class="space-y-8 text-white order-2 md:order-1">
+            <span class="text-lime-400 font-bold uppercase tracking-[0.2em] text-sm md:text-base">— Sanctuary for the Soul —</span>
+            <h2 class="text-4xl md:text-6xl font-display font-black leading-tight" x-text="translations[lang].spiritual.title"></h2>
+            <div class="space-y-6">
+              <template x-for="(item, i) in translations[lang].spiritual.items" :key="i">
+                <div class="flex items-center gap-6 group cursor-default">
+                  <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center group-hover:bg-lime-500 group-hover:text-brown-900 transition-all shadow-xl text-white">
+                    <i data-lucide="church" class="w-5 h-5"></i>
+                  </div>
+                  <span class="text-xl font-light tracking-wide text-brown-100" x-text="item"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+          <div class="order-1 md:order-2">
+            <div class="rounded-[3rem] overflow-hidden shadow-[2xl] border-4 border-white/20 transform md:rotate-2 hover:rotate-0 transition-transform duration-700">
+              <img 
+                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2000&auto=format&fit=crop" 
+                alt="Quiet Meditation" 
+                class="w-full h-full object-cover aspect-video"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education & Digital Library -->
+    <section id="education" class="py-24 px-6 overflow-hidden">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+        
+        <!-- Digital Library -->
+        <div class="bg-yellow-50 p-10 md:p-16 rounded-[3rem] relative overflow-hidden group">
+          <div class="relative z-10 space-y-6">
+            <div class="w-16 h-16 bg-yellow-200 text-brown-800 rounded-2xl flex items-center justify-center shadow-inner">
+              <i data-lucide="book-open" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-3xl font-display font-bold text-brown-900" x-text="translations[lang].education.digitalLibrary"></h3>
+            <p class="text-brown-800/70 text-lg leading-relaxed" x-text="translations[lang].education.libraryText"></p>
+            <button 
+              @click="handleEducationInquiry(translations[lang].education.digitalLibrary)"
+              class="inline-flex px-6 py-3 bg-white text-brown-900 rounded-full font-bold shadow-sm hover:shadow-md transition-all items-center gap-2"
+            >
+              <span>Inquire via WhatsApp</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 opacity-10 group-hover:rotate-12 transition-transform duration-700 pointer-events-none">
+             <i data-lucide="book-open" class="w-[300px] h-[300px] text-brown-900"></i>
+          </div>
+        </div>
+
+        <!-- Summer Classes -->
+        <div class="bg-red-50 p-10 md:p-16 rounded-[3rem] relative overflow-hidden group">
+          <div class="relative z-10 space-y-6">
+            <div class="w-16 h-16 bg-red-200 text-red-800 rounded-2xl flex items-center justify-center shadow-inner">
+              <i data-lucide="clock" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-3xl font-display font-bold text-red-900" x-text="translations[lang].education.summerClasses"></h3>
+            <p class="text-red-800/70 text-lg leading-relaxed" x-text="translations[lang].education.summerText"></p>
+            <button 
+              @click="handleEducationInquiry(translations[lang].education.summerClasses)"
+              class="inline-flex px-6 py-3 bg-white text-red-900 rounded-full font-bold shadow-sm hover:shadow-md transition-all items-center gap-2"
+            >
+              <span>Enroll Now</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+            <div class="flex flex-wrap gap-2 pt-4">
+              <span class="px-4 py-2 bg-white rounded-full text-xs font-bold text-red-900 uppercase">IT & Computer</span>
+              <span class="px-4 py-2 bg-white rounded-full text-xs font-bold text-red-900 uppercase">Studies</span>
+              <span class="px-4 py-2 bg-white rounded-full text-xs font-bold text-red-900 uppercase">Culture</span>
+            </div>
+          </div>
+          <div class="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 opacity-10 group-hover:rotate-12 transition-transform duration-700 pointer-events-none">
+             <i data-lucide="clock" class="w-[300px] h-[300px] text-red-900"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bookstore Section -->
+    <section id="bookstore" class="py-24 px-6 bg-[#F8FAFC]">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div class="space-y-4">
+            <span class="text-brown-700 font-black uppercase tracking-widest text-sm">— <span x-text="translations[lang].bookstore.businessName"></span></span>
+            <h2 class="text-4xl md:text-5xl font-display font-bold" x-text="translations[lang].bookstore.title"></h2>
+            <p class="text-slate-500 max-w-xl text-lg" x-text="translations[lang].bookstore.subtitle"></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col justify-between group">
+            <div>
+              <div class="aspect-[3/4] bg-slate-100 rounded-[2rem] mb-6 flex items-center justify-center overflow-hidden">
+                <i data-lucide="book-open" class="text-slate-300 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+              </div>
+              <h4 class="text-xl font-bold mb-1">Freedom from Ignorance - Vol 1</h4>
+              <p class="text-slate-400 text-sm mb-4">Complex Educational Series</p>
+            </div>
+            <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+              <span class="font-bold text-brown-700 uppercase text-xs tracking-wider">Free / Donation</span>
+              <button 
+                @click="handleBookOrder('Freedom from Ignorance - Vol 1')"
+                class="flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-brown-700 transition-colors"
+              >
+                <span x-text="translations[lang].bookstore.orderNow"></span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col justify-between group">
+            <div>
+              <div class="aspect-[3/4] bg-slate-100 rounded-[2rem] mb-6 flex items-center justify-center overflow-hidden">
+                <i data-lucide="book-open" class="text-slate-300 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+              </div>
+              <h4 class="text-xl font-bold mb-1">Spiritual Growth for Children</h4>
+              <p class="text-slate-400 text-sm mb-4">Capuchin Mentorship</p>
+            </div>
+            <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+              <span class="font-bold text-brown-700 uppercase text-xs tracking-wider">Available</span>
+              <button 
+                @click="handleBookOrder('Spiritual Growth for Children')"
+                class="flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-brown-700 transition-colors"
+              >
+                <span x-text="translations[lang].bookstore.orderNow"></span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col justify-between group">
+            <div>
+              <div class="aspect-[3/4] bg-slate-100 rounded-[2rem] mb-6 flex items-center justify-center overflow-hidden">
+                <i data-lucide="book-open" class="text-slate-300 w-16 h-16 group-hover:scale-110 transition-transform"></i>
+              </div>
+              <h4 class="text-xl font-bold mb-1">Studies in Times of Crisis</h4>
+              <p class="text-slate-400 text-sm mb-4">Resilience Library</p>
+            </div>
+            <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+              <span class="font-bold text-brown-700 uppercase text-xs tracking-wider">Digital Access</span>
+              <button 
+                @click="handleBookOrder('Studies in Times of Crisis')"
+                class="flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-brown-700 transition-colors"
+              >
+                <span x-text="translations[lang].bookstore.orderNow"></span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 px-6 bg-white overflow-hidden">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16 space-y-4">
+          <h2 class="text-4xl md:text-5xl font-display font-black uppercase tracking-tight text-brown-900" x-text="translations[lang].gallery.title"></h2>
+          <p class="text-slate-500 max-w-xl mx-auto" x-text="translations[lang].gallery.subtitle"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <template x-for="(image, i) in galleryImages" :key="i">
+            <div class="group relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+              <img 
+                :src="image.url" 
+                :alt="'Gallery ' + i" 
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                referrerPolicy="no-referrer"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+                <span 
+                  class="px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest border border-white/30"
+                  x-text="image.category"
+                ></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking Form -->
+    <section id="booking" class="py-24 px-6 max-w-4xl mx-auto">
+      <div class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-slate-100">
+        <div class="text-center mb-10 space-y-2">
+          <h2 class="text-3xl font-display font-bold" x-text="translations[lang].booking.title"></h2>
+          <p class="text-slate-500">Every Sunday is dedicated to free-play sessions. Pre-book your slot below.</p>
+        </div>
+
+        <!-- Success Message -->
+        <div x-show="formStatus === 'success'" class="text-center py-12 space-y-4" style="display: none;">
+          <div class="w-20 h-20 bg-brown-100 text-brown-700 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+          </div>
+          <h3 class="text-2xl font-bold" x-text="translations[lang].booking.success"></h3>
+          <button 
+            @click="formStatus = 'idle'"
+            class="text-brown-700 font-bold hover:underline"
+          >
+            Send another request
+          </button>
+        </div>
+
+        <!-- Booking Form Inputs -->
+        <form x-show="formStatus !== 'success'" @submit.prevent="handleBooking" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="text-xs font-black uppercase text-slate-400 ml-1" x-text="translations[lang].booking.name"></label>
+            <input required type="text" x-model="formData.name" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brown-500/20 focus:border-brown-500 transition-all" placeholder="John Doe" />
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-black uppercase text-slate-400 ml-1" x-text="translations[lang].booking.email"></label>
+            <input required type="text" x-model="formData.email" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brown-500/20 focus:border-brown-500 transition-all" placeholder="name@contact.com" />
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-black uppercase text-slate-400 ml-1" x-text="translations[lang].booking.activity"></label>
+            <select x-model="formData.activity" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brown-500/20 focus:border-brown-500 transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a1a1aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_10px] bg-[right_1.5rem_center] bg-no-repeat">
+              <option value="">Select Activity</option>
+              <template x-for="g in translations[lang].activities.games" :key="g">
+                <option :value="g" x-text="g"></option>
+              </template>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs font-black uppercase text-slate-400 ml-1" x-text="translations[lang].booking.date"></label>
+            <input required type="date" x-model="formData.date" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brown-500/20 focus:border-brown-500 transition-all" />
+          </div>
+          
+          <button 
+            type="submit"
+            :disabled="formStatus === 'loading'"
+            class="md:col-span-2 mt-4 px-8 py-5 bg-brown-700 text-white rounded-2xl font-black text-lg shadow-xl shadow-brown-200 hover:bg-brown-800 hover:shadow-brown-300 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+          >
+            <span x-text="formStatus === 'loading' ? 'Processing...' : translations[lang].booking.submit"></span>
+            <i data-lucide="send" class="w-5 h-5"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 bg-brown-900 text-brown-50 border-t border-brown-800">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-4 justify-center md:justify-start mb-2">
+            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-lg p-1">
+              <img 
+                src="https://i.imgur.com/JbPZHde.png" 
+                alt="Capuchin Sport Complex Logo" 
+                class="w-full h-full object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <span class="font-display font-bold text-2xl text-brown-50">Capuchin Sport Complex</span>
+          </div>
+          <p class="text-sm text-brown-300 flex items-center gap-2 justify-center md:justify-start">
+            <i data-lucide="map-pin" class="text-yellow-500 w-4 h-4"></i>
+            <span x-text="translations[lang].footer.location"></span>
+          </p>
+        </div>
+        
+        <div class="flex gap-10 text-brown-300 text-sm font-medium">
+           <a href="#" class="hover:text-yellow-500 transition-colors uppercase tracking-widest">Facebook</a>
+           <a href="#" class="hover:text-yellow-500 transition-colors uppercase tracking-widest">Instagram</a>
+           <a href="#" class="hover:text-yellow-500 transition-colors uppercase tracking-widest">Contact Us</a>
+        </div>
+
+        <div class="flex flex-col gap-2 md:items-end">
+          <p class="text-xs text-brown-400 font-medium" x-text="translations[lang].footer.copyright"></p>
+          <p class="text-[10px] text-brown-500 uppercase tracking-tighter">
+            Bambui • Bamenda • Beyond
+          </p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Translate standard strings object matchingtranslations.ts precisely
+    const translations = {
+      en: {
+        nav: {
+          home: 'Home',
+          activities: 'Recreation',
+          spiritual: 'Spiritual',
+          education: 'Education',
+          bookstore: 'Bookstore',
+          gallery: 'Gallery',
+          booking: 'Orders',
+        },
+        hero: {
+          title: "Capuchin Children's Sport Complex",
+          subtitle: 'A Sanctuary of Peace, Joy, and Growth in Bambui & Bamenda.',
+          cta: 'Explore Our Complex',
+        },
+        mission: {
+          title: 'Our Mission',
+          text: 'In response to the stress and trauma of our times, we provide a safe heaven where children can find rest, joy, and spiritual nourishment. From sports to silent prayers, we are here for you.',
+        },
+        activities: {
+          title: 'Recreational Activities',
+          games: [
+            'Football', 'Handball', 'Volleyball', 'Basketball', 
+            'Long Tennis', 'Table Tennis', 'Trampolining', 'Swings', 
+            'Merry-go-round', 'Briscola', 'Snooker', 'Babyfoot', 
+            'Carts', 'Bicycles'
+          ],
+        },
+        spiritual: {
+          title: 'Quiet Spaces & Spiritual Care',
+          items: [
+            'Prayers & Meditation',
+            'Spiritual Talks & Doctrine',
+            'Holy Mass',
+            'Sacramental Confession',
+            'Counseling Services',
+            'Peaceful Studies'
+          ],
+        },
+        gallery: {
+          title: 'Snapshots of Joy',
+          subtitle: 'Capturing moments of growth, sportsmanship, and spiritual peace.',
+        },
+        education: {
+          title: 'Growth & Learning',
+          digitalLibrary: 'Digital Library',
+          libraryText: 'Easy access to books and resources when hardcopies are impossible to find.',
+          summerClasses: 'Holy Day Classes',
+          summerText: 'July - August: Computer science, cultural studies, and more.',
+        },
+        bookstore: {
+          title: 'Freedom from Ignorance Bookstore',
+          subtitle: 'Browse our collection and order directly via WhatsApp.',
+          orderNow: 'Order via WhatsApp',
+          businessName: 'Freedom from ignorance',
+        },
+        booking: {
+          title: 'Place an Order / Request Access',
+          name: 'Full Name',
+          email: 'Email / Contact',
+          activity: 'Item or Activity',
+          date: 'Preferred Date',
+          submit: 'Send Order',
+          success: 'Your order has been sent! We will contact you soon via WhatsApp.',
+        },
+        footer: {
+          copyright: '© 2026 Capuchin Recreation Complex. All rights reserved.',
+          location: 'Bambui, Bamenda, and Beyond.',
+        },
+      },
+      fr: {
+        nav: {
+          home: 'Accueil',
+          activities: 'Récréation',
+          spiritual: 'Spirituel',
+          education: 'Éducation',
+          bookstore: 'Librairie',
+          gallery: 'Galerie',
+          booking: 'Commandes',
+        },
+        hero: {
+          title: "Complexe Sportif pour Enfants Capuchin",
+          subtitle: 'Un Sanctuaire de Paix, de Joie et de Croissance à Bambui & Bamenda.',
+          cta: 'Explorer le Complexe',
+        },
+        mission: {
+          title: 'Notre Mission',
+          text: 'Face au stress et aux traumatismes de notre époque, nous offrons un refuge sûr où les enfants peuvent trouver repos, joie et nourriture spirituelle. Du sport aux prières silencieuses, nous sommes là pour vous.',
+        },
+        activities: {
+          title: 'Activités Récréatives',
+          games: [
+            'Football', 'Handball', 'Volleyball', 'Basketball', 
+            'Tennis', 'Tennis de table', 'Trampoline', 'Balançoires', 
+            'Carrousel', 'Briscola', 'Snooker', 'Babyfoot', 
+            'Chariots', 'Bicyclettes'
+          ],
+        },
+        spiritual: {
+          title: 'Espaces de Silence et Soins Spirituels',
+          items: [
+            'Prières et Méditation',
+            'Entretiens Spirituels et Doctrine',
+            'Sainte Messe',
+            'Confession Sacramentelle',
+            'Services de Conseil',
+            'Études Paisibles'
+          ],
+        },
+        gallery: {
+          title: 'Instantanés de Joie',
+          subtitle: 'Capturer des moments de croissance, d\'esprit sportif et de paix spirituelle.',
+        },
+        education: {
+          title: 'Croissance et Apprentissage',
+          digitalLibrary: 'Bibliothèque Numérique',
+          libraryText: 'Accès facile aux livres et ressources quand les versions papier sont introuvables.',
+          summerClasses: 'Cours de Vacances',
+          summerText: 'Juillet - Août : Informatique, études culturelles, et plus.',
+        },
+        bookstore: {
+          title: 'Librairie Liberté de l\'Ignorance',
+          subtitle: 'Parcourez notre collection et commandez directement via WhatsApp.',
+          orderNow: 'Commander via WhatsApp',
+          businessName: 'Freedom from ignorance',
+        },
+        booking: {
+          title: 'Passer une Commande / Demander l\'Accès',
+          name: 'Nom Complet',
+          email: 'Email / Contact',
+          activity: 'Article ou Activité',
+          date: 'Date Préférée',
+          submit: 'Envoyer la Commande',
+          success: 'Votre commande a été envoyée ! Nous vous contacterons bientôt via WhatsApp.',
+        },
+        footer: {
+          copyright: '© 2026 Complexe Capuchin. Tous droits réservés.',
+          location: 'Bambui, Bamenda, et au-delà.',
+        },
+      },
+      it: {
+        nav: {
+          home: 'Home',
+          activities: 'Ricreazione',
+          spiritual: 'Spirituale',
+          education: 'Istruzione',
+          bookstore: 'Libreria',
+          gallery: 'Galleria',
+          booking: 'Ordini',
+        },
+        hero: {
+          title: "Complesso Sportivo per Bambini Capuchin",
+          subtitle: 'Un Santuario di Pace, Gioia e Crescita a Bambui e Bamenda.',
+          cta: 'Esplora il Complesso',
+        },
+        mission: {
+          title: 'La Nostra Missione',
+          text: 'In risposta allo stress e ai traumi dei nostri tempi, offriamo un rifugio sicuro dove i bambini possono trovare riposo, gioia e nutrimento spiritale. Dallo sport alle preghiere silenziose, siamo qui per voi.',
+        },
+        activities: {
+          title: 'Attività Ricreative',
+          games: [
+            'Calcio', 'Pallamano', 'Pallavolo', 'Basket', 
+            'Tennis', 'Ping Pong', 'Trampolino', 'Altalene', 
+            'Giostra', 'Briscola', 'Snooker', 'Calcetto', 
+            'Carrelli', 'Biciclette'
+          ],
+        },
+        spiritual: {
+          title: 'Spazi di Silenzio e Cura Spirituale',
+          items: [
+            'Preghiera e Meditazione',
+            'Colloqui Spirituali e Dottrina',
+            'Santa Messa',
+            'Confessione Sacramentale',
+            'Servizi di Consulenza',
+            'Studi Tranquilli'
+          ],
+        },
+        gallery: {
+          title: 'Istantanee di Gioia',
+          subtitle: 'Cogliere momenti di crescita, sportività e pace spirituale.',
+        },
+        education: {
+          title: 'Crescita e Apprendimento',
+          digitalLibrary: 'Biblioteca Digitale',
+          libraryText: 'Facile accesso a libri e risorse quando le copie cartacee sono impossibili da trovare.',
+          summerClasses: 'Classi di Vacanza',
+          summerText: 'Luglio - Agosto: Informatica, studi culturali e altro.',
+        },
+        bookstore: {
+          title: 'Libreria Libertà dall\'Ignoranza',
+          subtitle: 'Sfoglia la nostra collezione e ordina direttamente via WhatsApp.',
+          orderNow: 'Ordina via WhatsApp',
+          businessName: 'Freedom from ignorance',
+        },
+        booking: {
+          title: 'Passa un Ordine / Richiesta di Accesso',
+          name: 'Nome Completo',
+          email: 'Email / Contatto',
+          activity: 'Articolo o Attività',
+          date: 'Data Preferita',
+          submit: 'Invia Ordine',
+          success: 'Il tuo ordine è stato inviato! Ti contatteremo presto via WhatsApp.',
+        },
+        footer: {
+          copyright: '© 2026 Complesso Capuchin. Tutti i diritti riservati.',
+          location: 'Bambui, Bamenda e oltre.',
+        },
+      },
+      pid: {
+        nav: {
+          home: 'Home',
+          activities: 'Play-play',
+          spiritual: 'God Side',
+          education: 'School / Book',
+          bookstore: 'Book Shop',
+          gallery: 'Pictures Side',
+          booking: 'Order dem',
+        },
+        hero: {
+          title: "Capuchin Children's Sport Complex",
+          subtitle: 'Correct corner for peace, joy, and to grow for Bambui & Bamenda.',
+          cta: 'Waka check our side',
+        },
+        mission: {
+          title: 'Our Mission',
+          text: 'We di help pikin dem for find joy and peace for this hard time wey stress too much. From ball to prayer side, we dey here for you.',
+        },
+        activities: {
+          title: 'Play-play Works',
+          games: [
+            'Ball', 'Handball', 'Volleyball', 'Basketball', 
+            'Tennis', 'Table Tennis', 'Trampolining', 'Swings', 
+            'Merry-go-round', 'Briscola', 'Snooker', 'Babyfoot', 
+            'Carts', 'Bicycles'
+          ],
+        },
+        spiritual: {
+          title: 'Quiet Corner & God Side',
+          items: [
+            'Prayer & Meditation',
+            'Spiritual Talk',
+            'Holymass',
+            'Confession',
+            'Counseling',
+            'School Works'
+          ],
+        },
+        gallery: {
+          title: 'Correct Pictures',
+          subtitle: 'See as we di play, grow, and prayer for peace.',
+        },
+        education: {
+          title: 'How for Grow & Learn',
+          digitalLibrary: 'Digital Library',
+          libraryText: 'Find book dem for internet easy side when paper book no dey.',
+          summerClasses: 'Holiday Classes',
+          summerText: 'July - August: Computer, culture, and more fine things.',
+        },
+        bookstore: {
+          title: 'Freedom from Ignorance Book Shop',
+          subtitle: 'Check our book dem and order direct for WhatsApp.',
+          orderNow: 'Order for WhatsApp',
+          businessName: 'Freedom from ignorance',
+        },
+        booking: {
+          title: 'Make Order / Ask for Access',
+          name: 'Full Name',
+          email: 'Email / Contact',
+          activity: 'Thing or Play',
+          date: 'Date wey you want',
+          submit: 'Send Order',
+          success: 'Your order don go! We go talk for you soon for WhatsApp.',
+        },
+        footer: {
+          copyright: '© 2026 Capuchin Complex. All rights reserved.',
+          location: 'Bambui, Bamenda, and Beyond.',
+        },
+      }
+    };
+
+    function appState() {
+      return {
+        lang: 'en',
+        formData: { name: '', email: '', activity: '', date: '' },
+        isMenuOpen: false,
+        isScrolled: false,
+        formStatus: 'idle',
+        translations: translations,
+        
+        activityImages: [
+          {
+            title: 'African Football Joy',
+            url: 'https://images.unsplash.com/photo-1540317580114-ed684c0c5c44?q=80&w=2070&auto=format&fit=crop',
+          },
+          {
+            title: 'Community Games',
+            url: 'https://images.unsplash.com/photo-1615570889163-cb5e9987979a?q=80&w=2070&auto=format&fit=crop',
+          },
+          {
+            title: 'Our Sports Spirit',
+            url: 'https://images.unsplash.com/photo-1506197603410-672520448130?q=80&w=2070&auto=format&fit=crop',
+          },
+          {
+            title: 'African Youth Power',
+            url: 'https://images.unsplash.com/photo-1526976668912-1a8123a8ffdf?q=80&w=2070&auto=format&fit=crop',
+          },
+          {
+            title: 'Future Generations',
+            url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop',
+          }
+        ],
+
+        galleryImages: [
+          {
+            url: 'https://images.unsplash.com/photo-1540317580114-ed684c0c5c44?q=80&w=2070&auto=format&fit=crop',
+            category: 'Sports',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1524069290683-0457abfe42c3?q=80&w=2070&auto=format&fit=crop',
+            category: 'Spiritual',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1506197603410-672520448130?q=80&w=2070&auto=format&fit=crop',
+            category: 'Sports',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1615570889163-cb5e9987979a?q=80&w=2070&auto=format&fit=crop',
+            category: 'Activities',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop',
+            category: 'Community',
+          },
+          {
+            url: 'https://images.unsplash.com/photo-1526976668912-1a8123a8ffdf?q=80&w=2070&auto=format&fit=crop',
+            category: 'Growth',
+          },
+        ],
+
+        init() {
+          // Initialize Lucide Icons
+          lucide.createIcons();
+          
+          // Whenever translation changes, trigger re-evaluation of icons
+          this.$watch('lang', () => {
+            this.$nextTick(() => {
+              lucide.createIcons();
+            });
+          });
+        },
+
+        handleBooking() {
+          this.formStatus = 'loading';
+          
+          // Construct WhatsApp message
+          const whatsappNumber = '237677672859';
+          const message = `*Freedom from ignorance - Order Request*\n*Name:* ${this.formData.name}\n*Contact:* ${this.formData.email}\n*Item/Activity:* ${this.formData.activity}\n*Date:* ${this.formData.date}`;
+          const encodedMessage = encodeURIComponent(message);
+          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+          
+          window.open(whatsappUrl, '_blank');
+          this.formStatus = 'success';
+        },
+
+        handleBookOrder(bookTitle) {
+          const whatsappNumber = '237677672859';
+          const message = `*Freedom from ignorance - Bookstore Order*\n*Request:* I would like to order the book: *${bookTitle}*`;
+          const encodedMessage = encodeURIComponent(message);
+          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+          window.open(whatsappUrl, '_blank');
+        },
+
+        handleEducationInquiry(topic) {
+          const whatsappNumber = '237677672859';
+          const message = `*Freedom from ignorance - Education Inquiry*\n*Topic:* I am interested in: *${topic}*`;
+          const encodedMessage = encodeURIComponent(message);
+          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+          window.open(whatsappUrl, '_blank');
+        }
+      };
+    }
+  </script>
+</body>
+</html>
